@@ -1,78 +1,62 @@
-# Class For the Tic Tac Toe
 
 class Game
-  attr_reader :current_player, :winner, :plays
-
+  attr_reader :current_player, :winner, :plays, :win
+  @win = false
   def initialize
     @plays = 9
     @board = Array.new(3) { Array.new(3) { ' ' } }
     @current_player = 'X'
   end
 
-  # lazy to document
+  # Return current state of player boear
   def getboard
-    puts "Tic Tac Toe:     Player #{@current_player} \n\n"
-    for i in 0..2
-
-      print @board[i]
-      print "\n"
-
+    puts "Tic Tac Toe\nCurrent player: #{@current_player} \n\n"
+    2.times.each {|i| print "#{@board[i]}\n"}
     end
-    # @board
   end
 
-  # lazy to document
   def make_move(row, col)
-    system('clear')
-    if row >= 0 && row <= 2 && col >= 0 && col <= 2
-      if @board[row][col] != 'X' && @board[row][col] != 'O'
+
+    if row.include?(0..2) && col.includes?(0..2)
+      if @board[row][col].empty?
         @board[row][col] = @current_player
-        switch_player
+        system('clear') #clear console
         getboard
         check_win
-      else
-        getboard
-        puts "\nError: Warning, the slot is entered!"
-      end
-      @plays -= 1
 
+      else
+        puts "\nWarning, the slot: [#{row+1},#{col+1}] has already be used!"
+      end
     else
-      getboard
+      puts "\nWarning, the slot: [#{row+1},#{col+1}] is out of bounds!"
     end
   end
 
   def check_win
-    # check win... lazy to document
-    first_elements = @board.map { |sub_array| sub_array[0] }
-    second_elements = @board.map { |sub_array| sub_array[1] }
-    third_elements  = @board.map { |sub_array| sub_array[2] }
 
     # lazy to document
     first_diagonal = [@board[0][0], @board[1][1], @board[2][2]]
     second_diagonal = [@board[0][2], @board[1][1], @board[2][0]]
 
     # lazy to document
-    @board.map do |row|
-      if row.all?('X') || first_elements.all?('X') || second_elements.all?('X') || third_elements.all?('X') || first_diagonal.all?('X') || second_diagonal.all?('X')
-        @plays = 0
-        puts "\nPlayer X wins"
-        return
-      elsif row.all?('O') || first_elements.all?('O') || second_elements.all?('O') || third_elements.all?('O') || first_diagonal.all?('O') || second_diagonal.all?('O')
-        @plays = 0
-        puts "\nPlayer O wins"
-        return
-      end
-    end
+    @win = @board.map{|a| a[0] }.all?(@current_player) || @board.map{|b| b[1] }.all?(@current_player) 
+          ||  @board.map{|c| c[2] }.all?(@current_player) || first_diagonal.all?(@current_player) || second_diagonal.all?(@current_player)
+    
+    puts "Player #{@current_player} won" if @win
+    break if @win
+    switch_player
   end
 
   # lazy to document
   def switch_player
+
     @current_player = if @current_player == 'O'
                         'X'
                       else
                         'O'
                       end
   end
+  @plays -= 1
 end
 
 # lazy to document
@@ -83,7 +67,7 @@ tic_tac_toe = Game.new
 tic_tac_toe.getboard
 
 # lazy to document
-while tic_tac_toe.plays > 0
+until tic_tac_toe.plays = 0 || tic_tac_toe.won
 
   print "\nEnter row: "
   row = gets.chomp.to_i - 1
@@ -92,3 +76,4 @@ while tic_tac_toe.plays > 0
 
   tic_tac_toe.make_move(row, col)
 end
+ puts "Draw" if !tic_tac_toe.win
