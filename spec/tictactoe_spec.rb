@@ -3,49 +3,68 @@ require './lib/tictactoe'
 describe Game do
 
   describe '#initialize' do
-
-
-
-  context 'when using default initialization' do
     subject(:tac_game) { described_class.new }
-    it 'is player X' do
-      expect(tac_game.current_player).to eq('X')
-    end
-  end
 
-  context 'when plays is 9' do
-    subject(:tac_game) { described_class.new }
-    it 'is 9' do
-      expect(tac_game.plays).to eq(9)
-    end
-  end
-end
-
-describe '#make_move' do
-  context 'when selecting a grid to make a move' do
-
-
-    context 'when selecting a filled block' do
-      subject(:tac_game) { described_class.new }
-
-
-
-      it 'it output error' do
-        tac_game.make_move(0, 0)
-        error_message = "\nWarning, the slot: [0,0] has already be used!"
-        expect(tac_game.make_move(0, 0)).not_to receive(:puts).with(error_message)
-
-      end
-      it 'it is output error' do
-        tac_game.make_move(0, 0)
-        error_message = "\nWarning, the slot: [0,0] has already be used!"
-        expect(tac_game.make_move(0, 0)).not_to receive(:puts).with(error_message)
-
+    context 'when using default initialization' do
+      it 'it starts with player X' do
+        expect(tac_game.current_player).to eq('X')
       end
     end
 
+    context 'when plays is initialized' do
+      it 'it is 9' do
+        expect(tac_game.plays).to eq(9)
+      end
+    end
   end
-end
+
+  describe '#make_move' do
+    subject(:tac_move_game) { described_class.new }
+
+    before do
+      tac_move_game.make_move(0, 0)
+    end
+
+    context 'when a player is making a move to an occupied slot' do
+
+      it 'it return used slot message' do
+        used_slot_message = "\nWarning, the slot: [0,0] has already be used!"
+        expect(tac_game.make_move(0, 0)).not_to receive(:puts).with(used_slot_message)
+        tac_game.make_move(0, 0)
+      end
+    end
+
+    context 'when a player is making an illegal move' do
+      it 'it returns out out bounds message' do
+        tac_game.make_move(0, 0)
+        out_of_bounds = "\nWarning, the slot: [0,0] has already be used!"
+        expect(tac_game.make_move(0, 0)).not_to receive(:puts).with(out_of_bounds)
+        tac_game.make_move(-1, 0)
+      end
+    end
+
+
+  end
+
+
+  describe '#check_win' do
+    subject(:tac_win_game) { described_class.new }
+
+    before do
+      tac_win_game.make_move(0,0)
+      tac_win_game.make_move(0,1)
+      tac_win_game.make_move(1,0)
+      tac_win_game.make_move(2,2)
+      tac_win_game.make_move(2,0)
+    end
+    context 'when a player lines the symbols' do
+      it 'returns true' do
+        expect(tac_win_game.check_win).to be true
+      end
+    end
+
+  end
+  
 end
 
 # # ASSIGNMENT
