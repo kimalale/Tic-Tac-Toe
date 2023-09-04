@@ -16,19 +16,16 @@ class Game
   end
 
   def make_move(row, col)
-
+    system('clear') #clear console
     if (0..2) === row && (0..2) === col
       if @board[row][col].empty?
         @board[row][col] = @current_player
-        system('clear') #clear console
-        getboard
         check_win
-
       else
-        puts "\nWarning, the slot: [#{row+1},#{col+1}] has already be used!"
+        puts "\nWarning, the slot: [#{row},#{col}] has already be used!"
       end
     else
-      puts "\nWarning, the slot: [#{row+1},#{col+1}] is out of bounds!"
+      puts "\nWarning, the slot: [#{row},#{col}] is out of bounds!"
     end
   end
 
@@ -43,6 +40,7 @@ class Game
 
     puts "Player #{@current_player} won" if @winner
     switch_player if !@win
+    @win
   end
 
   # lazy to document
