@@ -29,17 +29,16 @@ describe Game do
 
       it 'it return used slot message' do
         used_slot_message = "\nWarning, the slot: [0,0] has already be used!"
-        expect(tac_game.make_move(0, 0)).not_to receive(:puts).with(used_slot_message)
-        tac_game.make_move(0, 0)
+        expect(tac_move_game).to receive(:puts).with(used_slot_message)
+        tac_move_game.make_move(0, 0)
       end
     end
 
     context 'when a player is making an illegal move' do
       it 'it returns out out bounds message' do
-        tac_game.make_move(0, 0)
         out_of_bounds = "\nWarning, the slot: [0,0] has already be used!"
-        expect(tac_game.make_move(0, 0)).not_to receive(:puts).with(out_of_bounds)
-        tac_game.make_move(-1, 0)
+        expect(tac_move_game).not_to receive(:puts).with(out_of_bounds)
+        tac_move_game.make_move(-1, 0)
       end
     end
 
@@ -58,13 +57,13 @@ describe Game do
       tac_win_game.make_move(2,0)
     end
     context 'when a player lines the symbols' do
-      it 'returns true' do
-        expect(tac_win_game.check_win).to be true
+      it 'returns winner statement' do
+        expect(tac_win_game.check_win).to be_truthy
       end
     end
 
   end
-  
+
 end
 
 # # ASSIGNMENT
